@@ -81,6 +81,9 @@ public class Funcionalidade {
         double horasAlugadas = 0.0;
         double horasAMais = 0.0;
         double horasAMenos = 0.0;
+        double desconto = 0.0;
+        double total = 0.0;
+
 
         Carro carro = locadora.getCarro(placa);
 
@@ -107,10 +110,16 @@ public class Funcionalidade {
         aluguel.setFinalizado();
         carro.setDevolvido();
 
+        if (carro.getAluguel().getCliente() instanceof ClienteFidelidade ) {
+            desconto = aluguel.getValor() * 0.10;
+        }
+        total = (aluguel.getValor()) +  Math.abs(horasAMais * valorHora) - Math.abs(horasAMenos * valorHora);
 
-        System.out.println(aluguel + "\n" + "Valor R$ " + aluguel.getValor());
-        System.out.println("Multa R$ " + horasAMais * valorHora);
+        System.out.println(aluguel);
+        System.out.println("Valor R$ " + total + " - Desconto: " + desconto);
+        System.out.println("Multa R$ " + Math.abs(horasAMais * valorHora));
         System.out.println("Devolução R$ " + Math.abs(horasAMenos * valorHora));
+
     }
 
     // Responsável por imprimir todos os clientes
@@ -200,9 +209,10 @@ public class Funcionalidade {
         for (Aluguel a : carro.getAlugueis()) {
             locadora.removeAluguel(a);
             a.getCliente().removeAluguel(a);
-            carro.removeAluguel(a);
         }
 
         locadora.removeCarro(carro);
+
+        System.out.println("Carro removido com sucesso!");
     }
 }
